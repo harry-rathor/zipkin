@@ -23,6 +23,7 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>zipkin-model</module>
     <module>zipkin</module>
     <module>zipkin-ui</module>
     <module>zipkin-junit</module>
@@ -142,6 +143,12 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>zipkin-model</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>zipkin</artifactId>

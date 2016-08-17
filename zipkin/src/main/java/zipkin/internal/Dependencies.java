@@ -15,18 +15,11 @@ package zipkin.internal;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-import okio.Buffer;
 import zipkin.DependencyLink;
 
+import static zipkin.internal.ThriftAdapter.read;
+import static zipkin.internal.ThriftAdapter.write;
 import static zipkin.internal.ThriftCodec.DEPENDENCY_LINKS_ADAPTER;
-import static zipkin.internal.ThriftCodec.Field;
-import static zipkin.internal.ThriftCodec.TYPE_I64;
-import static zipkin.internal.ThriftCodec.TYPE_LIST;
-import static zipkin.internal.ThriftCodec.TYPE_STOP;
-import static zipkin.internal.ThriftCodec.ThriftAdapter;
-import static zipkin.internal.ThriftCodec.read;
-import static zipkin.internal.ThriftCodec.skip;
-import static zipkin.internal.ThriftCodec.write;
 import static zipkin.internal.Util.checkNotNull;
 
 /**
@@ -45,7 +38,7 @@ public final class Dependencies {
 
   /** Writes the current instance in TBinaryProtocol */
   public ByteBuffer toThrift() {
-    return ByteBuffer.wrap(write(THRIFT_ADAPTER, this));
+    return ByteBuffer.wrap(write(THRIFT_ADAPTER, this, new ThriftCodec.OkioOutputBuffer()));
   }
 
   public static Dependencies create(long startTs, long endTs, List<DependencyLink> links) {
@@ -128,7 +121,7 @@ public final class Dependencies {
     }
 
     @Override
-    public void write(Dependencies value, Buffer buffer) {
+    public void write(Dependencies value, OutputBuffer buffer) {
 
       START_TS.write(buffer);
       buffer.writeLong(value.startTs);

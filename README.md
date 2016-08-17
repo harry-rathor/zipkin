@@ -23,10 +23,11 @@ Once you've started, browse to http://your_host:9411 to find traces!
 
 Check out the [`zipkin-server`](/zipkin-server) documentation for configuration details, or [`docker-zipkin`](https://github.com/openzipkin/docker-zipkin) for how to use docker-compose.
 
-## Core Library
-The [core library](https://github.com/openzipkin/zipkin/tree/master/zipkin/src/main/java/io/zipkin) requires minimum language level 7. While currently only used by the server, we expect this library to be used in native instrumentation as well.
 
-This includes built-in codec for both thrift and json structs. Direct dependencies on thrift or moshi (json library) are avoided by minifying and repackaging classes used. The result is a 190k jar which won't conflict with any library you use.
+## Model Library
+The [model library](https://github.com/openzipkin/zipkin/tree/master/zipkin-core/src/main/java/io/zipkin) requires minimum language level 6.
+
+This model library includes the minimum files needed to work with Zipkin: model classes, constants and a thrift span codec. All of this is in a 40K jar.
 
 Ex.
 ```java
@@ -40,7 +41,18 @@ span = Span.builder()
     .duration(durationInMicros)
     .addBinaryAnnotation(archiver);
 
-// Now, you can encode it as json or thrift
+// Now, you can encode it as thrift
+bytes = SpanCodec.THRIFT.writeSpan(span);
+```
+
+## Core Library
+The [core library](https://github.com/openzipkin/zipkin/tree/master/zipkin/src/main/java/io/zipkin) requires minimum language level 7.
+
+This core library includes an in-memory storage component as well  types needed to write a server. Direct dependencies on thrift or moshi (json library) are avoided by minifying and repackaging classes used. The result is a 160k jar which won't conflict with any library you use.
+
+Ex.
+```java
+// Codec extends SpanCodec to support dependency links and traces
 bytes = Codec.JSON.writeSpan(span);
 bytes = Codec.THRIFT.writeSpan(span);
 ```

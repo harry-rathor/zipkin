@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
+import zipkin.SpanCodec;
 import zipkin.storage.Callback;
 import zipkin.Codec;
 import zipkin.Span;
@@ -86,7 +87,15 @@ public final class Collector {
     this.metrics = builder.metrics == null ? CollectorMetrics.NOOP_METRICS : builder.metrics;
   }
 
+  /**
+   * @deprecated use the signature that includes SpanCodec. This will be removed in zipkin 2.
+   */
+  @Deprecated
   public void acceptSpans(byte[] serializedSpans, Codec codec, Callback<Void> callback) {
+    acceptSpans(serializedSpans, (SpanCodec) codec, callback);
+  }
+
+  public void acceptSpans(byte[] serializedSpans, SpanCodec codec, Callback<Void> callback) {
     metrics.incrementBytes(serializedSpans.length);
     List<Span> spans;
     try {
@@ -98,7 +107,15 @@ public final class Collector {
     accept(spans, callback);
   }
 
+  /**
+   * @deprecated use the signature that includes SpanCodec. This will be removed in zipkin 2.
+   */
+  @Deprecated
   public void acceptSpans(List<byte[]> serializedSpans, Codec codec, Callback<Void> callback) {
+    acceptSpans(serializedSpans, (SpanCodec) codec, callback);
+  }
+
+  public void acceptSpans(List<byte[]> serializedSpans, SpanCodec codec, Callback<Void> callback) {
     List<Span> spans = new ArrayList<>(serializedSpans.size());
     try {
       int bytesRead = 0;

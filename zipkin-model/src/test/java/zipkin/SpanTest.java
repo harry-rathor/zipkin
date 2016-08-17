@@ -21,9 +21,16 @@ import okio.ByteString;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static zipkin.TestObjects.APP_ENDPOINT;
 
 public class SpanTest {
+  Endpoint app = Endpoint.create("app", 172 << 24 | 17 << 16 | 2, 8080);
+  Span span = Span.builder()
+      .traceId(12345)
+      .id(666)
+      .name("methodcall")
+      .addAnnotation(Annotation.create(1L, Constants.SERVER_RECV, app))
+      .addAnnotation(Annotation.create(2L, Constants.SERVER_SEND, app))
+      .build();
 
   @Test
   public void idString_withParent() {
@@ -53,7 +60,7 @@ public class SpanTest {
         .traceId(1L)
         .name("")
         .id(1L)
-        .addBinaryAnnotation(BinaryAnnotation.address(Constants.SERVER_ADDR, APP_ENDPOINT))
+        .addBinaryAnnotation(BinaryAnnotation.address(Constants.SERVER_ADDR, app))
         .build();
 
     Span part2 = Span.builder()
@@ -62,8 +69,8 @@ public class SpanTest {
         .id(1L)
         .timestamp(1444438900939000L)
         .duration(376000L)
-        .addAnnotation(Annotation.create(1444438900939000L, Constants.SERVER_RECV, APP_ENDPOINT))
-        .addAnnotation(Annotation.create(1444438901315000L, Constants.SERVER_SEND, APP_ENDPOINT))
+        .addAnnotation(Annotation.create(1444438900939000L, Constants.SERVER_RECV, app))
+        .addAnnotation(Annotation.create(1444438901315000L, Constants.SERVER_SEND, app))
         .build();
 
     Span expected = part2.toBuilder()
@@ -95,11 +102,11 @@ public class SpanTest {
         .traceId(1L)
         .name("GET")
         .id(1L)
-        .addBinaryAnnotation(BinaryAnnotation.address(Constants.SERVER_ADDR, APP_ENDPOINT))
+        .addBinaryAnnotation(BinaryAnnotation.address(Constants.SERVER_ADDR, app))
         .build();
 
     assertThat(span.serviceNames())
-        .containsOnly(APP_ENDPOINT.serviceName);
+        .containsOnly(app.serviceName);
   }
 
   @Test
@@ -109,18 +116,18 @@ public class SpanTest {
         .id(666)
         .name("methodcall")
         .addAnnotation(Annotation.create(1L, "test", Endpoint.create("", 127 << 24 | 1)))
-        .addAnnotation(Annotation.create(2L, Constants.SERVER_RECV, APP_ENDPOINT))
+        .addAnnotation(Annotation.create(2L, Constants.SERVER_RECV, app))
         .build();
 
     assertThat(span.serviceNames())
-        .containsOnly(APP_ENDPOINT.serviceName);
+        .containsOnly(app.serviceName);
   }
 
   /** This helps tests not flake out when binary annotations aren't returned in insertion order */
   @Test
   public void sortsBinaryAnnotationsByKey() {
-    BinaryAnnotation foo = BinaryAnnotation.create("foo", "bar", APP_ENDPOINT);
-    BinaryAnnotation baz = BinaryAnnotation.create("baz", "qux", APP_ENDPOINT);
+    BinaryAnnotation foo = BinaryAnnotation.create("foo", "bar", app);
+    BinaryAnnotation baz = BinaryAnnotation.create("baz", "qux", app);
     Span span = Span.builder()
         .traceId(12345)
         .id(666)
@@ -166,8 +173,6 @@ public class SpanTest {
 
   @Test
   public void serialization() throws Exception {
-    Span span = TestObjects.TRACE.get(0);
-
     Buffer buffer = new Buffer();
     new ObjectOutputStream(buffer.outputStream()).writeObject(span);
 
@@ -177,12 +182,10 @@ public class SpanTest {
 
   @Test
   public void serializationUsesThrift() throws Exception {
-    Span span = TestObjects.TRACE.get(0);
-
     Buffer buffer = new Buffer();
     new ObjectOutputStream(buffer.outputStream()).writeObject(span);
 
-    byte[] thrift = Codec.THRIFT.writeSpan(span);
+    byte[] thrift = SpanCodec.THRIFT.writeSpan(span);
 
     assertThat(buffer.indexOf(ByteString.of(thrift)))
         .isPositive();

@@ -23,7 +23,7 @@ import org.apache.thrift.TException;
 import org.apache.thrift.TSerializer;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.junit.Test;
-import zipkin.Codec;
+import zipkin.SpanCodec;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -59,17 +59,17 @@ public class ThriftCodecInteropTest {
         new Annotation(1350, SERVER_SEND).setHost(thriftEndpoint)), asList());
 
     assertThat(serializer.serialize(thriftSpan))
-        .isEqualTo(Codec.THRIFT.writeSpan(zipkinSpan));
+        .isEqualTo(SpanCodec.THRIFT.writeSpan(zipkinSpan));
 
-    assertThat(Codec.THRIFT.writeSpan(zipkinSpan))
+    assertThat(SpanCodec.THRIFT.writeSpan(zipkinSpan))
         .isEqualTo(serializer.serialize(thriftSpan));
 
     Span deserializedThrift = new Span();
-    deserializer.deserialize(deserializedThrift, Codec.THRIFT.writeSpan(zipkinSpan));
+    deserializer.deserialize(deserializedThrift, SpanCodec.THRIFT.writeSpan(zipkinSpan));
     assertThat(deserializedThrift)
         .isEqualTo(thriftSpan);
 
-    assertThat(Codec.THRIFT.readSpan(serializer.serialize(thriftSpan)))
+    assertThat(SpanCodec.THRIFT.readSpan(serializer.serialize(thriftSpan)))
         .isEqualTo(zipkinSpan);
   }
 }

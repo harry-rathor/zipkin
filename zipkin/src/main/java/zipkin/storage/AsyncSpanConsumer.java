@@ -14,8 +14,8 @@
 package zipkin.storage;
 
 import java.util.List;
-import zipkin.Codec;
 import zipkin.Span;
+import zipkin.SpanCodec;
 import zipkin.collector.CollectorSampler;
 
 /**
@@ -29,7 +29,7 @@ import zipkin.collector.CollectorSampler;
 public interface AsyncSpanConsumer {
 
   /**
-   * Stores a list of spans {@link Codec#readSpans(byte[]) read} from a transport.
+   * Stores a list of spans {@link SpanCodec#readSpans(byte[]) read} from a transport.
    *
    * @param spans may be subject to a {@link CollectorSampler#isSampled(Span) sampling policy}.
    */

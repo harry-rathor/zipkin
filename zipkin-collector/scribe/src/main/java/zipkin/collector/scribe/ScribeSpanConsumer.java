@@ -21,6 +21,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 import zipkin.Codec;
+import zipkin.SpanCodec;
 import zipkin.collector.Collector;
 import zipkin.collector.CollectorMetrics;
 import zipkin.internal.Nullable;
@@ -53,7 +54,7 @@ final class ScribeSpanConsumer implements Scribe {
     }
 
     SettableFuture<ResultCode> result = SettableFuture.create();
-    collector.acceptSpans(thrifts, Codec.THRIFT, new Callback<Void>() {
+    collector.acceptSpans(thrifts, (SpanCodec) Codec.THRIFT, new Callback<Void>() {
       @Override public void onSuccess(@Nullable Void value) {
         result.set(ResultCode.OK);
       }

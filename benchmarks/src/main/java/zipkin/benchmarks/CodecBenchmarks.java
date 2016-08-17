@@ -39,6 +39,7 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import zipkin.Codec;
 import zipkin.Endpoint;
 import zipkin.Span;
+import zipkin.SpanCodec;
 
 /**
  * This compares the speed of the bundled java codec with the approach used in the scala
@@ -64,12 +65,17 @@ public class CodecBenchmarks {
   static final com.twitter.zipkin.thriftjava.Span localSpanLibThrift = deserialize(localSpanThrift);
 
   @Benchmark
-  public Span readLocalSpan_json_zipkin() {
+  public Span readLocalSpan_json() {
     return Codec.JSON.readSpan(localSpanJson);
   }
 
   @Benchmark
-  public Span readLocalSpan_thrift_zipkin() {
+  public Span readLocalSpan_thrift_model() {
+    return SpanCodec.THRIFT.readSpan(localSpanThrift);
+  }
+
+  @Benchmark
+  public Span readLocalSpan_thrift_core() {
     return Codec.THRIFT.readSpan(localSpanThrift);
   }
 
@@ -79,12 +85,17 @@ public class CodecBenchmarks {
   }
 
   @Benchmark
-  public byte[] writeLocalSpan_json_zipkin() {
+  public byte[] writeLocalSpan_json() {
     return Codec.JSON.writeSpan(localSpan);
   }
 
   @Benchmark
-  public byte[] writeLocalSpan_thrift_zipkin() {
+  public byte[] writeLocalSpan_thrift_model() {
+    return SpanCodec.THRIFT.writeSpan(localSpan);
+  }
+
+  @Benchmark
+  public byte[] writeLocalSpan_thrift_core() {
     return Codec.THRIFT.writeSpan(localSpan);
   }
 
@@ -100,12 +111,17 @@ public class CodecBenchmarks {
       deserialize(clientSpanThrift);
 
   @Benchmark
-  public Span readClientSpan_json_zipkin() {
+  public Span readClientSpan_json() {
     return Codec.JSON.readSpan(clientSpanJson);
   }
 
   @Benchmark
-  public Span readClientSpan_thrift_zipkin() {
+  public Span readClientSpan_thrift_model() {
+    return SpanCodec.THRIFT.readSpan(clientSpanThrift);
+  }
+
+  @Benchmark
+  public Span readClientSpan_thrift_core() {
     return Codec.THRIFT.readSpan(clientSpanThrift);
   }
 
@@ -115,12 +131,17 @@ public class CodecBenchmarks {
   }
 
   @Benchmark
-  public byte[] writeClientSpan_json_zipkin() {
+  public byte[] writeClientSpan_json() {
     return Codec.JSON.writeSpan(clientSpan);
   }
 
   @Benchmark
-  public byte[] writeClientSpan_thrift_zipkin() {
+  public byte[] writeClientSpan_thrift_model() {
+    return SpanCodec.THRIFT.writeSpan(clientSpan);
+  }
+
+  @Benchmark
+  public byte[] writeClientSpan_thrift_core() {
     return Codec.THRIFT.writeSpan(clientSpan);
   }
 
@@ -135,12 +156,17 @@ public class CodecBenchmarks {
   static final com.twitter.zipkin.thriftjava.Span rpcSpanLibThrift = deserialize(rpcSpanThrift);
 
   @Benchmark
-  public Span readRpcSpan_json_zipkin() {
+  public Span readRpcSpan_json() {
     return Codec.JSON.readSpan(rpcSpanJson);
   }
 
   @Benchmark
-  public Span readRpcSpan_thrift_zipkin() {
+  public Span readRpcSpan_thrift_model() {
+    return SpanCodec.THRIFT.readSpan(rpcSpanThrift);
+  }
+
+  @Benchmark
+  public Span readRpcSpan_thrift_core() {
     return Codec.THRIFT.readSpan(rpcSpanThrift);
   }
 
@@ -150,12 +176,17 @@ public class CodecBenchmarks {
   }
 
   @Benchmark
-  public byte[] writeRpcSpan_json_zipkin() {
+  public byte[] writeRpcSpan_json() {
     return Codec.JSON.writeSpan(rpcSpan);
   }
 
   @Benchmark
-  public byte[] writeRpcSpan_thrift_zipkin() {
+  public byte[] writeRpcSpan_thrift_model() {
+    return SpanCodec.THRIFT.writeSpan(rpcSpan);
+  }
+
+  @Benchmark
+  public byte[] writeRpcSpan_thrift_core() {
     return Codec.THRIFT.writeSpan(rpcSpan);
   }
 
@@ -170,12 +201,17 @@ public class CodecBenchmarks {
   static final com.twitter.zipkin.thriftjava.Span rpcV6SpanLibThrift = deserialize(rpcV6SpanThrift);
 
   @Benchmark
-  public Span readRpcV6Span_json_zipkin() {
+  public Span readRpcV6Span_json() {
     return Codec.JSON.readSpan(rpcV6SpanJson);
   }
 
   @Benchmark
-  public Span readRpcV6Span_thrift_zipkin() {
+  public Span readRpcV6Span_thrift_model() {
+    return SpanCodec.THRIFT.readSpan(rpcV6SpanThrift);
+  }
+
+  @Benchmark
+  public Span readRpcV6Span_thrift_core() {
     return Codec.THRIFT.readSpan(rpcV6SpanThrift);
   }
 
@@ -185,12 +221,17 @@ public class CodecBenchmarks {
   }
 
   @Benchmark
-  public byte[] writeRpcV6Span_json_zipkin() {
+  public byte[] writeRpcV6Span_json() {
     return Codec.JSON.writeSpan(rpcV6Span);
   }
 
   @Benchmark
-  public byte[] writeRpcV6Span_thrift_zipkin() {
+  public byte[] writeRpcV6Span_thrift_model() {
+    return SpanCodec.THRIFT.writeSpan(rpcV6Span);
+  }
+
+  @Benchmark
+  public byte[] writeRpcV6Span_thrift_core() {
     return Codec.THRIFT.writeSpan(rpcV6Span);
   }
 

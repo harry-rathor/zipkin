@@ -17,6 +17,7 @@ import java.util.Collections;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import zipkin.Codec;
+import zipkin.SpanCodec;
 import zipkin.collector.Collector;
 import zipkin.collector.CollectorMetrics;
 
@@ -57,12 +58,12 @@ final class KafkaStreamProcessor implements Runnable {
       // .. When serializing a List[ThriftSpan], the first byte is the member type, TType.STRUCT(12)
       // .. As ThriftSpan has no STRUCT fields: so, if the first byte is TType.STRUCT(12), it is a list.
       if (bytes[0] == '[') {
-        collector.acceptSpans(bytes, Codec.JSON, NOOP);
+        collector.acceptSpans(bytes, (SpanCodec) Codec.JSON, NOOP);
       } else {
         if (bytes[0] == 12 /* TType.STRUCT */) {
-          collector.acceptSpans(bytes, Codec.THRIFT, NOOP);
+          collector.acceptSpans(bytes, (SpanCodec) Codec.THRIFT, NOOP);
         } else {
-          collector.acceptSpans(Collections.singletonList(bytes), Codec.THRIFT, NOOP);
+          collector.acceptSpans(Collections.singletonList(bytes), (SpanCodec) Codec.THRIFT, NOOP);
         }
       }
     }

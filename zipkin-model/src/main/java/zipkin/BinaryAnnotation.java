@@ -14,10 +14,9 @@
 package zipkin;
 
 import java.util.Arrays;
-import zipkin.internal.JsonCodec;
 import zipkin.internal.Nullable;
-import zipkin.internal.Util;
 
+import static zipkin.internal.Util.UTF_8;
 import static zipkin.internal.Util.checkNotNull;
 import static zipkin.internal.Util.equal;
 
@@ -94,7 +93,7 @@ public final class BinaryAnnotation implements Comparable<BinaryAnnotation> {
 
   /** String values are the only queryable type of binary annotation. */
   public static BinaryAnnotation create(String key, String value, @Nullable Endpoint endpoint) {
-    return new BinaryAnnotation(key, value.getBytes(Util.UTF_8), Type.STRING, endpoint);
+    return new BinaryAnnotation(key, value.getBytes(UTF_8), Type.STRING, endpoint);
   }
 
   public static BinaryAnnotation create(String key, byte[] value, Type type, @Nullable Endpoint endpoint) {
@@ -174,7 +173,7 @@ public final class BinaryAnnotation implements Comparable<BinaryAnnotation> {
 
     /** @see BinaryAnnotation#value */
     public BinaryAnnotation.Builder value(String value) {
-      this.value = value.getBytes(Util.UTF_8);
+      this.value = value.getBytes(UTF_8);
       this.type = Type.STRING;
       return this;
     }
@@ -194,11 +193,6 @@ public final class BinaryAnnotation implements Comparable<BinaryAnnotation> {
     public BinaryAnnotation build() {
       return new BinaryAnnotation(key, value, type, endpoint);
     }
-  }
-
-  @Override
-  public String toString() {
-    return JsonCodec.BINARY_ANNOTATION_ADAPTER.toJson(this);
   }
 
   @Override

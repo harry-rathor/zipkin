@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 import zipkin.Codec;
+import zipkin.SpanCodec;
 import zipkin.collector.Collector;
 import zipkin.collector.CollectorMetrics;
 import zipkin.collector.CollectorSampler;
@@ -72,7 +73,7 @@ public class ZipkinHttpCollector {
     return validateAndStoreSpans(encoding, Codec.THRIFT, body);
   }
 
-  DeferredResult<ResponseEntity<?>> validateAndStoreSpans(String encoding, Codec codec,
+  DeferredResult<ResponseEntity<?>> validateAndStoreSpans(String encoding, SpanCodec codec,
       byte[] body) {
     DeferredResult<ResponseEntity<?>> result = new DeferredResult<>();
     metrics.incrementMessages();

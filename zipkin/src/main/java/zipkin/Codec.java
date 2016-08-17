@@ -20,20 +20,10 @@ import zipkin.internal.ThriftCodec;
 /**
  * Methods make an attempt to perform codec operations, failing to null.
  */
-public interface Codec {
+public interface Codec extends SpanCodec {
 
   JsonCodec JSON = new JsonCodec();
   ThriftCodec THRIFT = new ThriftCodec();
-
-  /** throws {@linkplain IllegalArgumentException} if the span couldn't be decoded */
-  Span readSpan(byte[] bytes);
-
-  byte[] writeSpan(Span value);
-
-  /** throws {@linkplain IllegalArgumentException} if the spans couldn't be decoded */
-  List<Span> readSpans(byte[] bytes);
-
-  byte[] writeSpans(List<Span> value);
 
   byte[] writeTraces(List<List<Span>> value);
 

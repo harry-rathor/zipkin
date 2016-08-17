@@ -25,6 +25,7 @@ import okio.GzipSource;
 import zipkin.Codec;
 import zipkin.DependencyLink;
 import zipkin.Span;
+import zipkin.SpanCodec;
 import zipkin.collector.Collector;
 import zipkin.collector.CollectorMetrics;
 import zipkin.storage.Callback;
@@ -88,7 +89,7 @@ final class ZipkinDispatcher extends Dispatcher {
           }
         }
         String type = request.getHeader("Content-Type");
-        Codec codec = type != null && type.contains("/x-thrift") ? Codec.THRIFT : Codec.JSON;
+        SpanCodec codec = type != null && type.contains("/x-thrift") ? Codec.THRIFT : Codec.JSON;
 
         final MockResponse result = new MockResponse();
         consumer.acceptSpans(body, codec, new Callback<Void>() {

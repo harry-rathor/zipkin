@@ -16,7 +16,6 @@ package zipkin;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import zipkin.storage.QueryRequest;
 
 public final class Constants {
 
@@ -180,8 +179,8 @@ public final class Constants {
    * Zipkin's core annotations indicate when a client or server operation began or ended.
    *
    * <p>These annotations are used to derive span timestamps and durations or highlight common
-   * latency explaining events. However, they aren't intuitive as {@link QueryRequest storage
-   * queries}, so needn't be indexed.
+   * latency explaining events. However, they aren't intuitive as storage queries, so needn't be
+   * indexed.
    */
   public static final List<String> CORE_ANNOTATIONS = Collections.unmodifiableList(
       Arrays.asList(CLIENT_SEND, CLIENT_RECV, SERVER_SEND, SERVER_RECV, WIRE_SEND, WIRE_RECV,

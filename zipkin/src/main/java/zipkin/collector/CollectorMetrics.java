@@ -14,14 +14,14 @@
 package zipkin.collector;
 
 import java.util.List;
+import zipkin.SpanCodec;
 import zipkin.storage.AsyncSpanConsumer;
 import zipkin.storage.Callback;
-import zipkin.Codec;
 import zipkin.Span;
 
 /**
  * Instrumented applications report spans over a transport such as Kafka. Zipkin collectors receive
- * these messages, {@link Codec#readSpans(byte[]) decoding them into spans}, {@link
+ * these messages, {@link SpanCodec#readSpans(byte[]) decoding them into spans}, {@link
  * CollectorSampler#isSampled(Span) apply sampling}, and {@link AsyncSpanConsumer#accept(List,
  * Callback) queue them for storage}.
  *
